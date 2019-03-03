@@ -11,22 +11,16 @@ static char **cut_area(char **area, int mode, int size)
 	/* upper left */
 	if (mode == 1)
 	{
-		i = 0;
-		while (i < size/2)
-		{
+		i = -1;
+		while (++i < size/2)
 			*(part + i) = *(area + i);
-			i++;
-		}
 	}
 	/* upper right */
 	else if (mode == 2)
 	{
-		i = 0;
-		while (i < size/2)
-		{
+		i = -1;
+		while (++i < size/2)
 			*(part + i) = *(area + i) + size/2;
-			i++;
-		}
 	}
 	/* lower right */
 	else
@@ -44,9 +38,7 @@ static char **cut_area(char **area, int mode, int size)
 static void	sierpinski(char **area, int size, int freecnt)
 {
 	if (size == 1)
-	{
 		**area = 'x';
-	}
 	else
 	{
 		sierpinski(cut_area(area, 1, size), size/2, freecnt+1);
