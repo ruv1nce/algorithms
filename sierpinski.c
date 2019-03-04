@@ -7,7 +7,7 @@ static char **cut_area(char **area, int mode, int size)
 	char	**part;
 	int	i;
 
-	part = malloc(size/2 * sizeof(char *));
+	part = malloc(size/2 * sizeof(part));
 	/* upper left */
 	if (mode == 1)
 	{
@@ -69,7 +69,7 @@ int			main(int argc, char **argv)
 	}
 
 	/* allocate for area */
-	area = malloc(size * sizeof(char *));
+	area = malloc(size * sizeof(area));
 	i = 0;
 	while (i < size)
 	{

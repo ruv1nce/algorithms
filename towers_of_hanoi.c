@@ -92,12 +92,12 @@ static int	create_stacks(int discs, int **a, int **b, int **c)
 {
 	int	i;
 
-	if (!(*a = malloc(discs * sizeof(int))))
+	if (!(*a = malloc(discs * sizeof(a))))
 		return (0);
-	if (!(*b = malloc(discs * sizeof(int))))
+	if (!(*b = malloc(discs * sizeof(b))))
 		return (0);
 	ft_bzero(*b, (discs * sizeof(int)));
-	if (!(*c = malloc(discs * sizeof(int))))
+	if (!(*c = malloc(discs * sizeof(c))))
 		return (0);
 	ft_bzero(*c, (discs * sizeof(int)));
 	i = 0;
@@ -133,4 +133,7 @@ int			main(int argc, char **argv)
 	print_towers(a, b, c, discs, discs);
 	move_tower(a, b, c, discs, discs);
 	print_towers(a, b, c, discs, discs);
+	free(a);
+	free(b);
+	free(c);
 }

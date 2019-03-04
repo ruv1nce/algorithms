@@ -71,7 +71,7 @@ static void push(int num, t_list **stack)
 {
 	t_list	*new;
 
-	if (!(new = malloc(sizeof(t_list *))))
+	if (!(new = malloc(sizeof(*new))))
 		return ;
 	new->num = num;
 	if (*stack)
@@ -103,6 +103,18 @@ static void	create_source(int discs, t_list **a)
 	}
 }
 
+static void	delete_lst(t_list **x)
+{
+	t_list	*tmp;
+
+	while (*x)
+	{
+		tmp = *x;
+		*x = (*x)->next;
+		free(tmp);
+	}
+}
+
 int			main(int argc, char **argv)
 {
 	int	discs;
@@ -128,4 +140,7 @@ int			main(int argc, char **argv)
 	print_towers(a, b, c, discs);
 	move_tower(&a, &b, &c, discs);
 	print_towers(a, b, c, discs);
+	delete_lst(&a);
+	delete_lst(&b);
+	delete_lst(&c);
 }
