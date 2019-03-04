@@ -12,4 +12,9 @@
 
 ^8^ sierpinski gasket ^8^
 
-Recursively fill a fractal with a user-specified size (size must be power of 2).
+Recursion. Fill a fractal with a user-specified size (size must be power of 2).
+
+
+^8^ towers of hanoi ^8^
+
+Recursion. Move a tower of discs from one peg to another using three pegs.
