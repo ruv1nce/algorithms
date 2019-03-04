@@ -49,6 +49,8 @@ static int	*combine(int *a, int *b, int asize, int bsize)
 		}
 		k++;
 	}
+	free(a);
+	free(b);
 	return (res);
 }
 
@@ -65,6 +67,7 @@ static int	*merge_sort_int(int *tab, int size)
 	bsize = size - asize;
 	a = merge_sort_int(div_tab(tab, 1, size), asize);
 	b = merge_sort_int(div_tab(tab, 2, size), bsize);
+	free(tab);
 	return (combine(a, b, asize, bsize));
 }
 
@@ -92,4 +95,5 @@ int	main(int argc, char **argv)
 	while (++argc < size)
 		printf("%i ", tab[argc]);
 	printf("\n");
+	free(tab);
 }
