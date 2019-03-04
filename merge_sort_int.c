@@ -1,29 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int	*div_tab(int *tab, int part, int size)
-{
-	int	*x;
-	int	xsize;
-	int	i;
-	int	odd;
-
-	xsize = (part == 1) ? size / 2 : size - (size / 2);
-	x = malloc(xsize * sizeof(int));
-	i = -1;
-	if (part == 1)
-		while (++i < xsize)
-			x[i] = tab[i];
-	else
-	{
-		odd = (size % 2 == 0) ? 0 : 1;
-		i = -1;
-		while (++i < xsize)
-			x[i] = tab[xsize - odd + i];
-	}
-	return (x);
-}
-
 static int	*combine(int *a, int *b, int asize, int bsize)
 {
 	int	*res;
@@ -49,25 +26,32 @@ static int	*combine(int *a, int *b, int asize, int bsize)
 		}
 		k++;
 	}
-	free(a);
-	free(b);
+	/* Only free a and b if they are product of previous combining \
+	 * and aren't just parts of the original array */
+	if (asize > 1)
+		free(a);
+	if (bsize > 1)
+		free(b);
 	return (res);
 }
 
-static int	*merge_sort_int(int *tab, int size)
+static int	*merge_sort_int(int **tab, int size)
 {
 	int	*a;
 	int	*b;
 	int	asize;
 	int	bsize;
+	int *tmp;
 
 	if (size < 2)
-		return (tab);
+		return (*tab);
 	asize = size / 2;
+	/* this way bsize works both for odd and even amount of ints */
 	bsize = size - asize;
-	a = merge_sort_int(div_tab(tab, 1, size), asize);
-	b = merge_sort_int(div_tab(tab, 2, size), bsize);
-	free(tab);
+	/* set tmp to the beginning of 'b' part and then pass its address */
+	tmp = *tab + asize;
+	a = merge_sort_int(tab, asize);
+	b = merge_sort_int(&tmp, bsize);
 	return (combine(a, b, asize, bsize));
 }
 
@@ -90,10 +74,29 @@ int	main(int argc, char **argv)
 	while (++argc < size)
 		printf("%i ", tab[argc]);
 	printf("\n");
-	tab = merge_sort_int(tab, size);
+	tab = merge_sort_int(&tab, size);
 	argc = -1;
 	while (++argc < size)
 		printf("%i ", tab[argc]);
 	printf("\n");
 	free(tab);
 }
+
+/*
+int main()
+{
+	const int	crap[6] = {10, 23, -9, 0, 0, 5};
+	const int	*tab;
+	int			size = 6;
+	int			i = -1;
+
+	while (++i < size)
+		printf("%i ", crap[i]);
+	printf("\n");
+	tab = &crap[0];
+	tab = merge_sort_int((int **)&tab, size);
+	i = -1;
+	while (++i < size)
+		printf("%i ", tab[i]);
+	printf("\n");
+}*/
