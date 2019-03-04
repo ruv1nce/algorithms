@@ -21,3 +21,7 @@
 
 **^8^** merge sort integers **^8^**<br />
 &emsp;&emsp;recursively half int array and after hitting base case sort subarrays to an alloc'd array<br />
+
+**^8^** quicksort integers **^8^**<br />
+&emsp;&emsp;recursively sort parts of array to the left and to the right of pivot<br />
+&emsp;&emsp;BUGS WHEN ARGC > 20<br />

@@ -70,11 +70,13 @@ int	main(int argc, char **argv)
 		tab[argc - 1] = atoi(argv[argc]);
 		argc--;
 	}
-	argc = -1;
+	/* print unsorted */
+/*	argc = -1;
 	while (++argc < size)
 		printf("%i ", tab[argc]);
-	printf("\n");
+	printf("\n"); */
 	tab = merge_sort_int(&tab, size);
+	/* print sorted */
 	argc = -1;
 	while (++argc < size)
 		printf("%i ", tab[argc]);
