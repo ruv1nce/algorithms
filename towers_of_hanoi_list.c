@@ -2,75 +2,69 @@
 #include "towers_of_hanoi.h"
 #include <stdio.h>
 
+static t_list	*print_disc(t_list *l, int mode)
+{
+	if (mode)
+	{
+		if (l && l->num)
+		{
+			printf(" | %i | ", l->num);
+			return (l->next);
+		}
+		else
+			printf(" | 0 | ");
+		return (l);
+	}
+	else
+	{
+		if (l && l->num)
+		{
+			if (l->num < 10)
+				printf(" |  %i | ", l->num);
+			else
+				printf(" | %i | ", l->num);
+			return (l->next);
+		}
+		else
+			printf(" |  0 | ");
+		return (l);
+	}
+}
+
 static void	print_towers(t_list *a, t_list *b, t_list *c, int size)
 {
-	if (size < 10)
-	{
+	int	mode;
+
+	mode = (size < 10) ? 1 : 0;
+	if (mode)
 		printf("  ___    ___    ___\n");
-		while (--size >= 0)
-		{
-			if (a && a->num)
-			{
-				printf(" | %i | ", a->num);
-				a = a->next;
-			}
-			else
-				printf(" | 0 | ");
-			if (b && b->num)
-			{
-				printf(" | %i | ", b->num);
-				b = b->next;
-			}
-			else
-				printf(" | 0 | ");
-			if (c && c->num)
-			{
-				printf(" | %i |\n", c->num);
-				c = c->next;
-			}
-			else
-				printf(" | 0 | \n");
-		}
-		printf(" aaaaa  bbbbb  ccccc\n");
-	}
-/*	else
-	{
+	else
 		printf("  ____    ____    ____\n");
-		while (--discs >= 0)
-		{
-			if (a[discs] < 10)
-				printf(" |  %i | ", a[discs]);
-			else
-				printf(" | %i | ", a[discs]);
-			if (b[discs] < 10)
-				printf(" |  %i | ", b[discs]);
-			else
-				printf(" | %i | ", b[discs]);
-			if (c[discs] < 10)
-				printf(" |  %i |\n", c[discs]);
-			else
-				printf(" | %i |\n", c[discs]);
-		}
+	while (--size >= 0)
+	{
+		a = print_disc(a, mode);
+		b = print_disc(b, mode);
+		c = print_disc(c, mode);
+		printf("\n");
+	}
+	if (mode)
+		printf(" aaaaa  bbbbb  ccccc\n");
+	else
 		printf(" aaaaaa  bbbbbb  cccccc\n");
-	}*/
 }
 
-static int	top(t_list **stack)
-{
-	if (!stack || !*stack)
-		return (-1);
-	return ((*stack)->num);
-}
-
-static void	pop(t_list **stack)
+static int	pop(t_list **stack)
 {
 	t_list	*tmp;
+	int		num;
 
 	if (!stack || !*stack)
-		return ;
+		return (-1);
 	tmp = *stack;
+	num = (*stack)->num;
 	*stack = (*stack)->next;
 	free(tmp);
+	return (num);
 }
 
 static void push(int num, t_list **stack)
@@ -82,6 +76,8 @@ static void push(int num, t_list **stack)
 	new->num = num;
 	if (*stack)
 		new->next = *stack;
+	else
+		new->next = NULL;
 	*stack = new;
 }
 
@@ -89,15 +85,11 @@ static void push(int num, t_list **stack)
 static void	move_tower(t_list **a, t_list **b, t_list **c, int discs)
 {
 	if (discs == 1)
-	{
-		push(top(a), b);
-		pop(a);
-	}
+		push(pop(a), b);
 	else
 	{
 		move_tower(a, c , b, discs - 1);
-		push(top(a), b);
-		pop(a);
+		push(pop(a), b);
 		move_tower(c, b, a, discs - 1);
 	}
 }
