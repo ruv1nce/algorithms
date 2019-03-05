@@ -39,7 +39,7 @@ static void	quicksort(int **tab, int p)
 	/* sort right part */
 	tmp = *tab + q + 1;
 	if (q < p)
-		quicksort(&tmp, p - q);
+		quicksort(&tmp, p - q - 1);
 }
 
 int	main(int argc, char **argv)

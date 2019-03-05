@@ -24,4 +24,3 @@
 
 **^8^** quicksort integers **^8^**<br />
 &emsp;&emsp;recursively sort parts of array to the left and to the right of pivot<br />
-&emsp;&emsp;BUGS WHEN ARGC > 20<br />
