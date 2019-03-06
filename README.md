@@ -24,3 +24,8 @@
 
 **^8^** quicksort integers **^8^**<br />
 &emsp;&emsp;recursively sort parts of array to the left and to the right of pivot<br />
+
+**graphs**
+
+**^8^** create graph **^8^**<br />
+&emsp;&emsp;create graph from file using three representations: edge list, adjacency matrix and adjacency lists<br />
