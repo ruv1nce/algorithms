@@ -1,7 +1,6 @@
 #include "libft.h"
 #include "graph.h"
 #include <stdio.h>
-#include <fcntl.h>
 
 static void	fill_edge(t_edge *egraph, int linecount, char *line)
 {
@@ -26,10 +25,10 @@ int	 		main(int argc, char **argv)
 	int		vertexcount;
 	int		i;
 	int		j;
-	int		k;
 	t_edge	*egraph;
-	t_adj	**agraph;
-	t_adj	**lgraph;
+	t_madj	**agraph;
+	t_ladj	**lgraph;
+	t_ladj	*tmp;
 
 	if (argc < 2)
 	{
@@ -118,49 +117,44 @@ int	 		main(int argc, char **argv)
 	}
 	printf("\n");
 
-	/* adjacency list representation DO WITH A LINKED LIST*/
-	if (!(lgraph = malloc((vertexcount + 1) * sizeof(*lgraph))))
+	/* adjacency list representation */
+	if (!(lgraph = malloc(vertexcount * sizeof(*lgraph))))
 		return (1);
-	lgraph[vertexcount] = NULL;
+	i = -1;
+	while (++i < vertexcount)
+		*(lgraph + i) = NULL;
 	i = -1;
 	while (++i < vertexcount)
 	{
 		j = -1;
-		k = 0;
 		while (++j < edgecount)
 		{
 			if (egraph[j].x == i)
-				k++;
+				lstadd_sort(&lgraph[i], egraph[j].y, egraph[j].weight);
 			else if (egraph[j].y == i)
-				k++;
-		}
-		printf("i %i j %i k %i\n", i, j, k);
-		if (!(*(lgraph + i) = malloc(k * sizeof(**lgraph))))
-			return (1);
-	}
-	i = -1;
-	while (++i < vertexcount)
-	{
-		j = -1;
-		k = 0;
-		while (++j < edgecount)
-		{
-			if (egraph[j].x == i)
-			{
-				lgraph[i][k].vertex == egraph[j].y;
-				lgraph[i][k].weight == egraph[j].weight;
-				k++;
-			}
-			else if (egraph[j].y == i)
-			{
-				lgraph[i][k].vertex == egraph[j].x;
-				lgraph[i][k].weight == egraph[j].weight;
-				k++;
-			}
+				lstadd_sort(&lgraph[i], egraph[j].x, egraph[j].weight);
 		}
 	}
 
+	/* print adjacency lists */
+	i = -1;
+	while (++i < vertexcount)
+	{
+		tmp = *(lgraph + i);
+		printf("V%i: ", i);
+		while (tmp)
+		{
+			printf("%i.%i ", tmp->vertex, tmp->weight);
+			tmp = tmp->next;
+		}
+		printf("\n");
+	}
+
+	/* free memory */
 	free(egraph);
 	free(agraph);
+	i = -1;
+	while (++i < vertexcount)
+		lstdel(&lgraph[i]);
 	free(lgraph);
 }
