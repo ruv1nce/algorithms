@@ -1,17 +1,26 @@
 #ifndef QUEUE_H
 # define QUEUE_H
 
+# include <stdlib.h>
+
+# define DEQ_ERR -2147483640
+
 typedef struct		node
 {
 	int				vertex;
-	struct s_list	*next;
+	struct node		*next;
 }					node;
 
 typedef struct		queue
 {
 	int				count;
-	node			*first;
-	node			*last;
+	node			*head;
+	node			*tail;
 }					queue;
+
+void				qinit(queue *q);
+int					enqueue(queue *q, int value);
+int					dequeue(queue *q);
+void				qdel(queue *q);
 
 #endif

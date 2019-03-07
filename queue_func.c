@@ -4,8 +4,8 @@
 void	qinit(queue *q)
 {
 	q->count = 0;
-	q->first = NULL;
-	q->last = NULL;
+	q->head = NULL;
+	q->tail = NULL;
 }
 
 int		enqueue(queue *q, int value)
@@ -14,17 +14,19 @@ int		enqueue(queue *q, int value)
 
 	if (!(new = malloc(sizeof(*new))))
 		return (0);
+	new->vertex = value;
 	new->next = NULL;
-	if (!(q->first))
+	if (!(q->head))
 	{
-		q->first = new;
-		q->last = new;
+		q->head = new;
+		q->tail = new;
 	}
 	else
 	{
-		q->last->next = new;
-		q->last = new;
+		q->tail->next = new;
+		q->tail = new;
 	}
+	q->count++;
 	return (1);
 }
 
@@ -33,22 +35,28 @@ int		dequeue(queue *q)
 	int		value;
 	node	*tmp;
 
-	tmp = q->first;
+	if (!(q->count))
+		return (DEQ_ERR);
+	tmp = q->head;
 	value = tmp->vertex;
-	q->first = q->first->next;
-	q->count--;
+	q->head = q->head->next;
+	if (!(q->count--))
+		q->tail = NULL;
 	free(tmp);
+	return (value);
 }
 
 void	qdel(queue *q)
 {
 	node	*tmp;
 
-	while (q->first)
+	while (q->head)
 	{
-		tmp = q->first;
-		q->first = q->first->next;
+		tmp = q->head;
+		q->head = q->head->next;
 		free(tmp);
 	}
-	q->first = NULL;
+	q->count = 0;
+	q->head = NULL;
+	q->tail = NULL;
 }
