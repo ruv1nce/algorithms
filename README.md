@@ -27,5 +27,5 @@
 
 **graphs**
 
-**^8^** create graph **^8^**<br />
+**^8^** graph create **^8^**<br />
 &emsp;&emsp;create graph from file using three representations: edge list, adjacency matrix and adjacency lists<br />

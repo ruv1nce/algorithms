@@ -130,9 +130,11 @@ int	 		main(int argc, char **argv)
 		while (++j < edgecount)
 		{
 			if (egraph[j].x == i)
-				lstadd_sort(&lgraph[i], egraph[j].y, egraph[j].weight);
+				if (!(lstadd_sort(&lgraph[i], egraph[j].y, egraph[j].weight)))
+					return (1);
 			else if (egraph[j].y == i)
-				lstadd_sort(&lgraph[i], egraph[j].x, egraph[j].weight);
+				if (!(lstadd_sort(&lgraph[i], egraph[j].x, egraph[j].weight)))
+					return (1);
 		}
 	}
 
