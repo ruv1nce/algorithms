@@ -2,6 +2,14 @@
 #include "graph.h"
 #include <stdio.h>
 
+/* requires list functions from graph_list.c for adjacency list representaion */
+
+void		bfs(t_vert *graph, int s);
+void		print_edges(t_edge *egraph, int edgecount);
+void		print_matrix(t_madj **mgraph, int vertexcount);
+void		print_adjlist(t_ladj **lgraph, int vertexcount);
+void		print_vstructadjlist(t_vert *bfsgraph, int vertexcount);
+
 static void	fill_edge(t_edge *egraph, int linecount, char *line)
 {
 	egraph[linecount].x = atoi(line);
@@ -25,10 +33,11 @@ int	 		main(int argc, char **argv)
 	int		vertexcount;
 	int		i;
 	int		j;
+	int		source;
 	t_edge	*egraph;
-	t_madj	**agraph;
+	t_madj	**mgraph;
 	t_ladj	**lgraph;
-	t_ladj	*tmp;
+	t_vert	*bfsgraph;
 
 	if (argc < 2)
 	{
@@ -65,21 +74,16 @@ int	 		main(int argc, char **argv)
 	}
 	free(line);
 	close(fd);
-
-	/* print edges */
-	i = -1;
-	while (++i < edgecount)
-		printf("%i,%i,%i\n", egraph[i].x, egraph[i].y, egraph[i].weight);
-
+	print_edges(egraph, edgecount);
 	printf("\n");
 
 	/* adjacency matrix representation */
-	if (!(agraph = malloc(vertexcount * sizeof(*agraph))))
+	if (!(mgraph = malloc(vertexcount * sizeof(*mgraph))))
 		return (1);
 	i = 0;
 	while (i < vertexcount)
 	{
-		if(!(*(agraph + i) = malloc(vertexcount * sizeof(**agraph))))
+		if(!(*(mgraph + i) = malloc(vertexcount * sizeof(**mgraph))))
 			return (1);
 		i++;
 	}
@@ -89,32 +93,20 @@ int	 		main(int argc, char **argv)
 		j = -1;
 		while (++j < vertexcount)
 		{
-			agraph[i][j].vertex = 0;
-			agraph[i][j].weight = 0;
+			mgraph[i][j].vertex = 0;
+			mgraph[i][j].weight = 0;
 		}
 	}
 	i = 0;
 	while (i < edgecount)
 	{
-		agraph[egraph[i].x][egraph[i].y].vertex = 1;
-		agraph[egraph[i].x][egraph[i].y].weight = egraph[i].weight;
-		agraph[egraph[i].y][egraph[i].x].vertex = 1;
-		agraph[egraph[i].y][egraph[i].x].weight = egraph[i].weight;
+		mgraph[egraph[i].x][egraph[i].y].vertex = 1;
+		mgraph[egraph[i].x][egraph[i].y].weight = egraph[i].weight;
+		mgraph[egraph[i].y][egraph[i].x].vertex = 1;
+		mgraph[egraph[i].y][egraph[i].x].weight = egraph[i].weight;
 		i++;
 	}
-
-	/* print matrix */
-	printf("     0   1   2   3   4   5   6\n");
-	printf("-------------------------------\n");
-	i = -1;
-	while (++i < vertexcount)
-	{
-		printf("%i | ", i);
-		j = -1;
-		while (++j < vertexcount)
-			printf("%i.%i ", agraph[i][j].vertex, agraph[i][j].weight);
-		printf("\n");
-	}
+	print_matrix(mgraph, vertexcount);
 	printf("\n");
 
 	/* adjacency list representation */
@@ -130,15 +122,107 @@ int	 		main(int argc, char **argv)
 		while (++j < edgecount)
 		{
 			if (egraph[j].x == i)
+			{
 				if (!(lstadd_sort(&lgraph[i], egraph[j].y, egraph[j].weight)))
 					return (1);
+			}
 			else if (egraph[j].y == i)
+			{
 				if (!(lstadd_sort(&lgraph[i], egraph[j].x, egraph[j].weight)))
 					return (1);
+			}
 		}
 	}
+	print_adjlist(lgraph, vertexcount);
+	printf("\n");
 
-	/* print adjacency lists */
+	/* adjacency lists with vertices struct array */
+	if (!(bfsgraph = malloc(vertexcount * sizeof(*bfsgraph))))
+		return (1);
+	i = -1;
+	while (++i < vertexcount)
+	{
+		bfsgraph[i].color = white;
+		bfsgraph[i].distance = -1;
+		bfsgraph[i].parent = -1;
+		bfsgraph[i].kids = NULL;
+	}
+	i = -1;
+	while (++i < vertexcount)
+	{
+		j = -1;
+		while (++j < edgecount)
+		{
+			if (egraph[j].x == i)
+			{
+				if (!(lstadd_sort(&bfsgraph[i].kids, egraph[j].y, egraph[j].weight)))
+					return (1);
+			}
+			else if (egraph[j].y == i)
+			{
+				if (!(lstadd_sort(&bfsgraph[i].kids, egraph[j].x, egraph[j].weight)))
+					return (1);
+			}
+		}
+	}
+	print_vstructadjlist(bfsgraph, vertexcount);
+	printf("\n");
+
+	source = 4;
+	bfs(bfsgraph, source);
+
+	print_vstructadjlist(bfsgraph, vertexcount);
+
+	/* free memory */
+	free(egraph);
+	free(mgraph);
+	i = -1;
+	while (++i < vertexcount)
+		lstdel(&lgraph[i]);
+	free(lgraph);
+	i = -1;
+	while (++i < vertexcount)
+		lstdel(&bfsgraph[i].kids);
+	free(bfsgraph);
+}
+
+void		print_edges(t_edge *egraph, int edgecount)
+{
+	int		i;
+
+	printf("edges: v1, v2, weight\n");
+	i = -1;
+	while (++i < edgecount)
+		printf("%i,%i,%i\n", egraph[i].x, egraph[i].y, egraph[i].weight);
+
+	printf("\n");
+}
+
+void		print_matrix(t_madj **mgraph, int vertexcount)
+{
+	int		i;
+	int		j;
+
+	printf("adj matrix: vertix.edge_weight\n");
+	printf("     0   1   2   3   4   5   6\n");
+	printf("-------------------------------\n");
+	i = -1;
+	while (++i < vertexcount)
+	{
+		printf("%i | ", i);
+		j = -1;
+		while (++j < vertexcount)
+			printf("%i.%i ", mgraph[i][j].vertex, mgraph[i][j].weight);
+		printf("\n");
+	}
+}
+
+void		print_adjlist(t_ladj **lgraph, int vertexcount)
+{
+	int		i;
+	t_ladj	*tmp;
+
+	printf("adj list: *(vertix + i): vertix.edge_weight\n");
 	i = -1;
 	while (++i < vertexcount)
 	{
@@ -151,12 +235,24 @@ int	 		main(int argc, char **argv)
 		}
 		printf("\n");
 	}
+}
 
-	/* free memory */
-	free(egraph);
-	free(agraph);
+void		print_vstructadjlist(t_vert *bfsgraph, int vertexcount)
+{
+	int		i;
+	t_ladj	*tmp;
+
+	printf("adj list: vertix[i]: vertix.edge_weight\n");
 	i = -1;
 	while (++i < vertexcount)
-		lstdel(&lgraph[i]);
-	free(lgraph);
+	{
+		tmp = bfsgraph[i].kids;
+		printf("V%i, color %i, distance %i, parent %i, kids: ", i, bfsgraph[i].color, bfsgraph[i].distance, bfsgraph[i].parent);
+		while (tmp)
+		{
+			printf("%i.%i ", tmp->vertex, tmp->weight);
+			tmp = tmp->next;
+		}
+		printf("\n");
+	}
 }
