@@ -5,10 +5,11 @@
 /* requires list functions from graph_list.c for adjacency list representaion */
 
 void		bfs(t_vert *graph, int s);
-void		print_edges(t_edge *egraph, int edgecount);
-void		print_matrix(t_madj **mgraph, int vertexcount);
-void		print_adjlist(t_ladj **lgraph, int vertexcount);
-void		print_vstructadjlist(t_vert *bfsgraph, int vertexcount);
+void		show_path(t_vert	*graph, int dest);
+static void	print_edges(t_edge *egraph, int edgecount);
+static void	print_matrix(t_madj **mgraph, int vertexcount);
+static void	print_adjlist(t_ladj **lgraph, int vertexcount);
+static void	print_vstructadjlist(t_vert *bfsgraph, int vertexcount);
 
 static void	fill_edge(t_edge *egraph, int linecount, char *line)
 {
@@ -34,6 +35,7 @@ int	 		main(int argc, char **argv)
 	int		i;
 	int		j;
 	int		source;
+	int		dest;
 	t_edge	*egraph;
 	t_madj	**mgraph;
 	t_ladj	**lgraph;
@@ -170,6 +172,10 @@ int	 		main(int argc, char **argv)
 
 	source = 4;
 	bfs(bfsgraph, source);
+	dest = 5;
+	printf("path from %i to %i: ", source, dest);
+	show_path(bfsgraph, dest);
+	printf("\n\n");
 
 	print_vstructadjlist(bfsgraph, vertexcount);
 
@@ -186,7 +192,7 @@ int	 		main(int argc, char **argv)
 	free(bfsgraph);
 }
 
-void		print_edges(t_edge *egraph, int edgecount)
+static void	print_edges(t_edge *egraph, int edgecount)
 {
 	int		i;
 
@@ -198,7 +204,7 @@ void		print_edges(t_edge *egraph, int edgecount)
 	printf("\n");
 }
 
-void		print_matrix(t_madj **mgraph, int vertexcount)
+static void	print_matrix(t_madj **mgraph, int vertexcount)
 {
 	int		i;
 	int		j;
@@ -217,7 +223,7 @@ void		print_matrix(t_madj **mgraph, int vertexcount)
 	}
 }
 
-void		print_adjlist(t_ladj **lgraph, int vertexcount)
+static void	print_adjlist(t_ladj **lgraph, int vertexcount)
 {
 	int		i;
 	t_ladj	*tmp;
@@ -237,7 +243,7 @@ void		print_adjlist(t_ladj **lgraph, int vertexcount)
 	}
 }
 
-void		print_vstructadjlist(t_vert *bfsgraph, int vertexcount)
+static void	print_vstructadjlist(t_vert *bfsgraph, int vertexcount)
 {
 	int		i;
 	t_ladj	*tmp;

@@ -34,9 +34,14 @@
 &emsp;&emsp;single linked list implemetation<br />
 
 **^8^** bfs **^8^**<br />
-&emsp;&emsp;breadth-first search using struct array of vertices and linked adjacency lists<br />
+&emsp;&emsp;breadth-first search using struct array of vertices and linked adjacency lists + show path<br />
 
 **dynamic programming**
 
 **^8^** fibonacci **^8^**<br />
 &emsp;&emsp;fibonacci numbers on unsigned long longs<br />
+
+TODO:
+randomized quicksort
+priority queue
+dijkstra's algorithm
