@@ -25,7 +25,7 @@
 **^8^** quicksort integers **^8^**<br />
 &emsp;&emsp;recursively sort parts of array to the left and to the right of pivot<br />
 
-&emsp;**+backtracking**
+&emsp;&emsp;**+backtracking**
 
 **^8^** permutations **^8^**<br />
 &emsp;&emsp;print all permutations of a char set + dp variant<br />
