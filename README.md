@@ -49,6 +49,14 @@
 **^8^** fibonacci **^8^**<br />
 &emsp;&emsp;fibonacci numbers on unsigned long longs<br />
 
+**^8^** longest common substring **^8^**<br />
+&emsp;&emsp;longest common contiguous substring in two strings<br />
+
+**data structures**
+
+**^8^** singly linked list **^8^**<br />
+&emsp;&emsp;simple version and version with a tail pointer<br />
+
 TODO:
 randomized quicksort<br />
 priority queue<br />
