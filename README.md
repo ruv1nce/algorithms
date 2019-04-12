@@ -57,6 +57,11 @@
 **^8^** singly linked list **^8^**<br />
 &emsp;&emsp;simple version and version with a tail pointer<br />
 
+**misc**
+
+**^8^** is_palindrome **^8^**<br />
+&emsp;&emsp;checks if the string is a palindrome<br />
+
 TODO:
 randomized quicksort<br />
 priority queue<br />
