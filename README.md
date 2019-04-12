@@ -57,6 +57,9 @@
 **^8^** singly linked list **^8^**<br />
 &emsp;&emsp;simple version and version with a tail pointer<br />
 
+**^8^** binary search trees **^8^**<br />
+&emsp;&emsp;insert, delete, search, traverse, min, max, successor, predecessor<br />
+
 **misc**
 
 **^8^** is_palindrome **^8^**<br />
