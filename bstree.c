@@ -1,5 +1,7 @@
 #include "bstree.h"
 
+/* implement a list of equal values for each node */
+
 int		bstree_insert(t_node **root, int value)
 {
 	t_node	*new;
