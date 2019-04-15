@@ -66,11 +66,11 @@ t_node	*bstree_max(t_node *root)
 	return (root);
 }
 
-void	bstree_transplant(t_node *root, t_node *trunk, t_node *sprout)
+void	bstree_transplant(t_node **root, t_node *trunk, t_node *sprout)
 {
 	/* if sprout goes in place of root */
-	if (trunk == root)
-		root = sprout;
+	if (trunk == *root)
+		*root = sprout;
 	else
 	{
 		/* make sprout to be trunk parent's child */
@@ -84,7 +84,7 @@ void	bstree_transplant(t_node *root, t_node *trunk, t_node *sprout)
 		sprout->p = trunk->p;
 }
 
-void	bstree_delete(t_node *root, t_node *node)
+void	bstree_delete(t_node **root, t_node *node)
 {
 	t_node	*successor;
 
@@ -236,26 +236,33 @@ int		main(int argc, char **argv)
 		if ((tmp = bstree_predecessor(tmp)))
 			printf("%2i\n", tmp->value);
 
+		printf("root: %i\n", root->value);
 		if ((tmp = bstree_search(root, 3)))
-			bstree_delete(root, tmp);
+			bstree_delete(&root, tmp);
 		printf("in   ");
 		bstree_inorder(root);
 		printf("\n");
 		if ((tmp = bstree_search(root, 9)))
-			bstree_delete(root, tmp);
+			bstree_delete(&root, tmp);
 		printf("in   ");
 		bstree_inorder(root);
 		printf("\n");
 		if ((tmp = bstree_search(root, 43)))
-			bstree_delete(root, tmp);
+			bstree_delete(&root, tmp);
 		printf("in   ");
 		bstree_inorder(root);
 		printf("\n");
 		if ((tmp = bstree_search(root, 22)))
-			bstree_delete(root, tmp);
+			bstree_delete(&root, tmp);
 		printf("in   ");
 		bstree_inorder(root);
 		printf("\n");
+
+		bstree_delete(&root, root);
+		printf("in   ");
+		bstree_inorder(root);
+		printf("\n");
+		printf("new root: %i\n", root->value);
 
 		bstree_burn(&root);
 		printf("%p\n", root);
