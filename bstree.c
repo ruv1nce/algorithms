@@ -347,7 +347,10 @@ int		main(int argc, char **argv)
 		bstree_inorder(newtree, 1);
 		printf("\n");
 
-		can_split(root);
+//		can_split(root);
+
+		printf("width: %i\n", width_tree(root));
+		printf("width: %i\n", width_tree(NULL));
 
 		bstree_burn(&root);
 //		printf("%p\n", root);

@@ -15,5 +15,6 @@ typedef struct		s_node
 
 struct s_node   *convert_bst(struct s_node *bst);
 int				can_split(struct s_node *n);
+int				width_tree(struct s_node *n);
 
 #endif

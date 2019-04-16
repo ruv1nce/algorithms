@@ -69,6 +69,6 @@
 &emsp;&emsp;checks if the string is a palindrome<br />
 
 TODO:
-randomized quicksort<br />
 priority queue<br />
 dijkstra's algorithm<br />
+AVL tree<br />
