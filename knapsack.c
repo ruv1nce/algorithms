@@ -17,7 +17,7 @@ typedef struct loot
 
 typedef struct cell
 {
-	int		free;
+	int		load;
 	int		sum;
 	loot	*sack;
 }			cell;
@@ -28,17 +28,64 @@ void	print_grid(cell **grid, item *store, int c, int r)
 	int	j;
 
 	j = -1;
+	printf("\n");
 	while (++j <= r)
 	{
 		printf("%s ", store[j].name);
 		i = -1;
 		while (++i <= c)
-			printf("%i %i %p | ", grid[j][i].free, grid[j][i].sum, grid[j][i].sack);
+		{
+			printf("%i %i ", grid[j][i].load, grid[j][i].sum);
+			if (!grid[j][i].sack)
+				printf("0 | ");
+			else
+				printf("+ | ");
+		}
 		printf("\n");
 	}
 }
 
-void	put_in_sack(cell *dest, 
+loot	*new_loot(item *stuff)
+{
+	loot	*new;
+
+	if (stuff)
+	{
+		if (!(new = malloc(sizeof(*new))))
+			return (NULL);
+		new->stolen = stuff;
+		new->next = NULL;
+		return (new);
+	}
+	return (NULL);
+}
+
+void	put_in_sack(cell *dest, item *stuff, cell *src)
+{
+	loot	*tmp;
+	loot	*addloot;
+
+	dest->load += src->load;
+	dest->sum += src->sum;
+	/* put item in sack */
+	if (stuff)
+	{
+		dest->load += stuff->wt;
+		dest->sum += stuff->val;
+		dest->sack = new_loot(stuff);
+		addloot = dest->sack->next;
+	}
+	else
+		addloot = dest->sack;
+	tmp = src->sack;
+	/* copy loot from previous solution cell */
+	while (tmp)
+	{
+		addloot = new_loot(tmp->stolen);
+		tmp = tmp->next;
+		addloot = addloot->next;
+	}
+}	
 
 int		steal(item *store, cell **grid, int capacity, int item_count)
 {
@@ -46,16 +93,16 @@ int		steal(item *store, cell **grid, int capacity, int item_count)
 	int r;
 	int	c;
 
-	r = -1;
+	r = 0;
 	/* iterate on items */
-	while (++r < item_count)
+	while (++r <= item_count)
 	{
 		c = 0;
 		/* iterate on subknapsacks */
 		while (++c <= capacity)
 		{
 			/* will current item fit? */
-			if (store[r].wt <= grid[r][c].free)
+			if (store[r].wt <= c)
 			{
 				/* Is it worth taking?
 				 * Combine current item's value with the total value of loot for the remaining space.
@@ -63,14 +110,17 @@ int		steal(item *store, cell **grid, int capacity, int item_count)
 				 * (2) values are equal, but taking new item leaves more free space */
 				if ((store[r].val + grid[r - 1][c - store[r].wt].sum > grid[r - 1][c].sum) 
 						|| ((store[r].val + grid[r - 1][c - store[r].wt].sum == grid[r - 1][c].sum) 
-							&& (grid[r - 1][c - store[r].wt].free - store[r].wt > grid[r - 1][c].free)))
+							&& (grid[r - 1][c - store[r].wt].load + store[r].wt < grid[r - 1][c].load)))
 				{
 					put_in_sack(&grid[r][c], &store[r], &grid[r - 1][c - store[r].wt]);
 				}
 			}
 			/* if it doesn't fit, copy from previous row */
+			else
+				put_in_sack(&grid[r][c], NULL, &grid[r - 1][c]);
 		}
 	}
+	return (1);
 }
 
 /*
@@ -133,7 +183,7 @@ cell	**create_grid(cell **grid, int c, int r)
 		i = -1;
 		while (++i < c)
 		{
-			grid[j][i].free = i;
+			grid[j][i].load = 0;
 			grid[j][i].sum = 0;
 			grid[j][i].sack = NULL;
 		}
@@ -147,6 +197,7 @@ int		main(int argc, char **argv)
 	int		item_count;
 	item	*store;
 	cell	**grid;
+	loot	*tmp;
 	int		i;
 
 	if ((argc - 2) % 3)
@@ -175,5 +226,8 @@ int		main(int argc, char **argv)
 		
 		steal(store, grid, capacity, item_count);
 
+		print_grid(grid, store, capacity, item_count);
+
+		printf("%s %s\n", grid[2][6].sack->stolen->name, grid[2][6].sack->next->stolen->name);
 	}
 }
