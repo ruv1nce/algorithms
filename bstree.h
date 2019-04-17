@@ -16,5 +16,8 @@ typedef struct		s_node
 struct s_node   *convert_bst(struct s_node *bst);
 int				can_split(struct s_node *n);
 int				width_tree(struct s_node *n);
+int				longest_sequence(struct s_node *node);
+int				longest_sequence2(struct s_node *node);
+int				longest_sequence3(struct s_node *node);
 
 #endif

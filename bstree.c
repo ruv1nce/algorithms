@@ -349,8 +349,10 @@ int		main(int argc, char **argv)
 
 //		can_split(root);
 
-		printf("width: %i\n", width_tree(root));
-		printf("width: %i\n", width_tree(NULL));
+//		printf("width: %i\n", width_tree(root));
+//		printf("width: %i\n", width_tree(NULL));
+
+//		printf("seq  %i\n", longest_sequence(root));
 
 		bstree_burn(&root);
 //		printf("%p\n", root);
