@@ -27,15 +27,24 @@ void	print_grid(cell **grid, item *store, int c, int r)
 	int	i;
 	int	j;
 
-	j = -1;
+	printf("\n         ");
+	i = -1;
+	while (++i <= c)
+		printf("    %2i    ", i);
+	printf("\n---------");
+	i = -1;
+	while (++i <= c)
+		printf("----------");
 	printf("\n");
+	j = -1;
 	while (++j <= r)
 	{
-		printf("%s ", store[j].name);
+		printf("%.5s ", store[j].name);
+		printf("%i | ", j);
 		i = -1;
 		while (++i <= c)
 		{
-			printf("%i %i ", grid[j][i].load, grid[j][i].sum);
+			printf("%2i %2i ", grid[j][i].load, grid[j][i].sum);
 			if (!grid[j][i].sack)
 				printf("0 | ");
 			else
@@ -43,6 +52,11 @@ void	print_grid(cell **grid, item *store, int c, int r)
 		}
 		printf("\n");
 	}
+	printf("---------");
+	i = -1;
+	while (++i <= c)
+		printf("----------");
+	printf("\n");
 }
 
 loot	*new_loot(item *stuff)
@@ -62,30 +76,50 @@ loot	*new_loot(item *stuff)
 
 void	put_in_sack(cell *dest, item *stuff, cell *src)
 {
-	loot	*tmp;
-	loot	*addloot;
+	loot	*add_here;
 
-	dest->load += src->load;
-	dest->sum += src->sum;
-	/* put item in sack */
+	add_here = NULL;
 	if (stuff)
 	{
 		dest->load += stuff->wt;
 		dest->sum += stuff->val;
 		dest->sack = new_loot(stuff);
-		addloot = dest->sack->next;
+		add_here = dest->sack;
 	}
+	dest->load += src->load;
+	dest->sum += src->sum;
+	if (!add_here)
+		dest->sack = src->sack;
 	else
-		addloot = dest->sack;
-	tmp = src->sack;
-	/* copy loot from previous solution cell */
-	while (tmp)
-	{
-		addloot = new_loot(tmp->stolen);
-		tmp = tmp->next;
-		addloot = addloot->next;
-	}
-}	
+		add_here->next = src->sack;
+}
+
+//void	put_in_sack(cell *dest, item *stuff, cell *src)
+//{
+//	loot	*tmp;
+//	loot	*addloot;
+//
+//	dest->load += src->load;
+//	dest->sum += src->sum;
+//	/* put item in sack */
+//	if (stuff)
+//	{
+//		dest->load += stuff->wt;
+//		dest->sum += stuff->val;
+//		dest->sack = new_loot(stuff);
+//		addloot = dest->sack->next;
+//	}
+//	else
+//		addloot = dest->sack;
+//	tmp = src->sack;
+//	/* copy loot from previous solution cell */
+//	while (tmp)
+//	{
+//		addloot = new_loot(tmp->stolen);
+//		tmp = tmp->next;
+//		addloot = addloot->next;
+//	}
+//}	
 
 int		steal(item *store, cell **grid, int capacity, int item_count)
 {
@@ -152,7 +186,7 @@ int		fill_store(item **store, char **s, int cnt)
 
 	if (!(*store = malloc(sizeof(item) * cnt)))
 		return (0);
-		(*store + 0)->name = "bull";
+		(*store + 0)->name = "     ";
 		(*store + 0)->wt = 0;
 		(*store + 0)->val = 0;
 	i = 0;
@@ -212,7 +246,7 @@ int		main(int argc, char **argv)
 
 		/* print vars and store */
 		printf("capacity %i, item count %i\n", capacity, item_count);
-		i = -1;
+		i = 0;
 		while (++i <= item_count)
 			printf("%s w%i v%i, ", (store + i)->name, (store + i)->wt, (store + i)->val);
 		printf("\n");
@@ -228,6 +262,13 @@ int		main(int argc, char **argv)
 
 		print_grid(grid, store, capacity, item_count);
 
-		printf("%s %s\n", grid[2][6].sack->stolen->name, grid[2][6].sack->next->stolen->name);
+		printf("total loot value: %i, total loot weight: %i (of %i capacity)\nstolen items: ", grid[item_count][capacity].sum, grid[item_count][capacity].load, capacity);
+		tmp = grid[item_count][capacity].sack;
+		while (tmp)
+		{
+			printf("%s ", tmp->stolen->name);
+			tmp = tmp->next;
+		}
+		printf("\n");
 	}
 }
