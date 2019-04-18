@@ -1,26 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct item
-{
-	char		*name;
-	int			wt;
-	int			val;
-	struct item	*next;
-}				item;
-
-typedef struct loot
-{
-	item		*stolen;
-	struct loot	*next;
-}				loot;
-
-typedef struct cell
-{
-	int		load;
-	int		sum;
-	loot	*sack;
-}			cell;
+#include "knapsack.h"
 
 void	print_grid(cell **grid, item *store, int c, int r)
 {
@@ -94,33 +72,6 @@ void	put_in_sack(cell *dest, item *stuff, cell *src)
 		add_here->next = src->sack;
 }
 
-//void	put_in_sack(cell *dest, item *stuff, cell *src)
-//{
-//	loot	*tmp;
-//	loot	*addloot;
-//
-//	dest->load += src->load;
-//	dest->sum += src->sum;
-//	/* put item in sack */
-//	if (stuff)
-//	{
-//		dest->load += stuff->wt;
-//		dest->sum += stuff->val;
-//		dest->sack = new_loot(stuff);
-//		addloot = dest->sack->next;
-//	}
-//	else
-//		addloot = dest->sack;
-//	tmp = src->sack;
-//	/* copy loot from previous solution cell */
-//	while (tmp)
-//	{
-//		addloot = new_loot(tmp->stolen);
-//		tmp = tmp->next;
-//		addloot = addloot->next;
-//	}
-//}	
-
 int		steal(item *store, cell **grid, int capacity, int item_count)
 {
 	/* row and column */
@@ -148,36 +99,17 @@ int		steal(item *store, cell **grid, int capacity, int item_count)
 				{
 					put_in_sack(&grid[r][c], &store[r], &grid[r - 1][c - store[r].wt]);
 				}
+				else
+					/* else copy from previous row */
+					put_in_sack(&grid[r][c], NULL, &grid[r - 1][c]);
 			}
-			/* if it doesn't fit, copy from previous row */
+			/* if it doesn't fit, also copy from previous row */
 			else
 				put_in_sack(&grid[r][c], NULL, &grid[r - 1][c]);
 		}
 	}
 	return (1);
 }
-
-/*
-int		add_item(item **store, char *name, int wt, int val)
-{
-	item	*new;
-
-	if (!(new = malloc(sizeof(*new))))
-		return (0);
-	new->name = name;
-	new->wt = wt;
-	new->val = val;
-	new->next = NULL;
-	if (!(*store))
-		*store = new;
-	else
-	{
-		new->next = *store;
-		*store = new;
-	}
-	return (1);
-}
-*/
 
 int		fill_store(item **store, char **s, int cnt)
 {
@@ -186,18 +118,17 @@ int		fill_store(item **store, char **s, int cnt)
 
 	if (!(*store = malloc(sizeof(item) * cnt)))
 		return (0);
-		(*store + 0)->name = "     ";
-		(*store + 0)->wt = 0;
-		(*store + 0)->val = 0;
+	(*store)[0].name = "     ";
+	(*store)[0].wt = 0;
+	(*store)[0].val = 0;
 	i = 0;
 	j = 0;
-	while (j < cnt)
+	while (++j < cnt)
 	{
-		(*store + j + 1)->name = s[i];
-		(*store + j + 1)->wt = atoi(s[i + 1]);
-		(*store + j + 1)->val = atoi(s[i + 2]);
+		(*store)[j].name = s[i];
+		(*store)[j].wt = atoi(s[i + 1]);
+		(*store)[j].val = atoi(s[i + 2]);
 		i += 3;
-		j++;
 	}
 	return (1);
 }
@@ -235,7 +166,7 @@ int		main(int argc, char **argv)
 	int		i;
 
 	if ((argc - 2) % 3)
-		printf("usage: ./bin <knapsack.capacity> <item_1_name> <item_1_weight> <item_1_value> ... <item_n_name> <item_n_weight> <item_n_value>\n");
+		printf("usage: ./bin <knapsack_capacity> <item_1_name> <item_1_weight> <item_1_value> ... <item_n_name> <item_n_weight> <item_n_value>\n");
 	else
 	{
 		capacity = atoi(argv[1]);
@@ -270,5 +201,10 @@ int		main(int argc, char **argv)
 			tmp = tmp->next;
 		}
 		printf("\n");
+		free(store);
+		i = -1;
+		while (++i <= item_count)
+			free(grid[i]);
+		free(grid);
 	}
 }
