@@ -354,6 +354,8 @@ int		main(int argc, char **argv)
 
 //		printf("seq  %i\n", longest_sequence(root));
 
+//		perimeter(root);
+		
 		bstree_burn(&root);
 //		printf("%p\n", root);
 //		bstree_inorder(root, 0);

@@ -156,6 +156,58 @@ cell	**create_grid(cell **grid, int c, int r)
 	return (grid);
 }
 
+void	free_grid(cell **grid, int c, int r)
+{
+	int		x;
+	int		y;
+	loot	*tmp;
+	loot	*prev;
+
+	/* first go: mark and detach */
+	/*iterate on rows and columns */
+	y = -1;
+	while (++y <= r)
+	{
+		x = -1;
+		while (++x <= c)
+		{
+			tmp = grid[y][x].sack;
+			/* if sack is pointing to a marked data, detach it */
+			if (tmp && !tmp->stolen)
+				grid[y][x].sack = NULL;
+			else
+			{
+				/* traverse the list and mark all data; if encountered marked data in next - detach */
+				while (tmp)
+				{
+					tmp->stolen = NULL;
+					if (tmp->next && !tmp->next->stolen)
+						tmp->next = NULL;
+					tmp = tmp->next;
+				}
+			}
+		}
+	}
+	/* second go: free */
+	y = -1;
+	while (++y <= r)
+	{
+		x = -1;
+		while (++x <= c)
+		{
+			tmp = grid[y][x].sack;
+			while (tmp)
+			{
+				prev = tmp;
+				tmp = tmp->next;
+				free(prev);
+			}
+		}
+		free(grid[y]);
+	}
+	free(grid);
+}
+
 int		main(int argc, char **argv)
 {
 	int		capacity;
@@ -201,10 +253,7 @@ int		main(int argc, char **argv)
 			tmp = tmp->next;
 		}
 		printf("\n");
+		free_grid(grid, capacity, item_count);
 		free(store);
-		i = -1;
-		while (++i <= item_count)
-			free(grid[i]);
-		free(grid);
 	}
 }

@@ -52,6 +52,10 @@
 **^8^** longest common substring **^8^**<br />
 &emsp;&emsp;longest common contiguous substring in two strings<br />
 
+**^8^** knapsack **^8^**<br />
+&emsp;&emsp;a thief in a store tries to maximize his loot constrained by the size of his knapsack<br />
+&emsp;&emsp;utilizes a two-pass mark and detach approach to free interconnected lists<br />
+
 **data structures**
 
 **^8^** singly linked list **^8^**<br />
