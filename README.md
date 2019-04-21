@@ -69,6 +69,9 @@
 
 **misc**
 
+**^8^** insertion sort **^8^**<br />
+&emsp;&emsp;simple iterative sorting, good for almost sorted arrays<br />
+
 **^8^** is_palindrome **^8^**<br />
 &emsp;&emsp;checks if the string is a palindrome<br />
 

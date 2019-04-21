@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "libft.h"
+#include <strings.h>
 #define SIZE 10
 
 static void	permute(char *elem, char *sol, char *dp, int i, int len)
@@ -31,7 +31,7 @@ int	main(void)
 	char	sol[SIZE];
 	char	dp[SIZE];
 
-	ft_bzero(sol, SIZE);
-	ft_bzero(dp, SIZE);
-	permute(elem, sol, dp, 0, ft_strlen(elem));
+	bzero(sol, SIZE);
+	bzero(dp, SIZE);
+	permute(elem, sol, dp, 0, strlen(elem));
 }
