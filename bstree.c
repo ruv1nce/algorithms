@@ -247,8 +247,8 @@ t_node	*bstree_dup(t_node *root, t_node *p)
 int		main(int argc, char **argv)
 {
 	t_node	*root;
-	t_node	*newtree;
-//	t_node	*tmp;
+//	t_node	*newtree;
+	t_node	*tmp;
 	int		i;
 
 	/* arguments for testing: 24 13 56 3 22 43 42 -5 8 99 5 9 7 6 23 */
@@ -320,7 +320,7 @@ int		main(int argc, char **argv)
 		printf("\n");
 		printf("new root: %i\n", root->value);*/
 
-		/* convert_bst exam question 
+		/* convert_bst exam question */
 		printf("circular\n");
 		root = convert_bst(root);
 		tmp = root;
@@ -331,9 +331,9 @@ int		main(int argc, char **argv)
 			root = root->right;
 			i = 0;
 		}
-		printf("\n full circle %i\n", root->value);*/
+		printf("\n full circle %i\n", root->value);
 
-		printf("descendants\n");
+/*		printf("descendants\n");
 		printf("in   ");
 		bstree_inorder(root, 1);
 		bstree_descendants(root);
@@ -345,7 +345,7 @@ int		main(int argc, char **argv)
 		newtree = bstree_dup(root, NULL);
 		printf("in   ");
 		bstree_inorder(newtree, 1);
-		printf("\n");
+		printf("\n");*/
 
 //		can_split(root);
 
@@ -356,11 +356,11 @@ int		main(int argc, char **argv)
 
 //		perimeter(root);
 		
-		bstree_burn(&root);
+//		bstree_burn(&root);
 //		printf("%p\n", root);
 //		bstree_inorder(root, 0);
 
-		bstree_burn(&newtree);
+//		bstree_burn(&newtree);
 //		printf("%p\n", newtree);
 //		bstree_inorder(newtree, 0);
 	}
